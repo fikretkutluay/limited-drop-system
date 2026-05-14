@@ -19,7 +19,7 @@ export const validate = (schema: ZodTypeAny) => {
     const parsed = result.data as { body: unknown; query: unknown; params: unknown };
 
     req.body = parsed.body;
-    req.params = parsed.params;
+    req.params = parsed.params as Record<string, string>;
     res.locals.validated = parsed;
 
     next();
