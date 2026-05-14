@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  reservations Reservation[]
+  orders       Order[]
+  createdAt    DateTime      @default(now())
+}
+
+model Product {
+  id            String         @id @default(uuid())
+  name          String
+  stock         Int            @default(0)
+  version       Int            @default(1) // OCC for race conditions
+  reservations  Reservation[]
+  inventoryLogs InventoryLog[]
+  createdAt     DateTime       @default(now())
+}
+
+model Reservation {
+  id        String            @id @default(uuid())
+  user      User              @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product           @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int
+  status    ReservationStatus @default(PENDING)
+  expiresAt DateTime
+  order     Order?
+  createdAt DateTime          @default(now())
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  reservationId String      @unique
+  user          User        @relation(fields: [userId], references: [id])
+  userId        String
+  createdAt     DateTime    @default(now())
+}
+
+model InventoryLog {
+  id        String   @id @default(uuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  change    Int      
+  reason    String   
+  createdAt DateTime @default(now())
+}
+
+enum ReservationStatus {
+  PENDING
+  COMPLETED
+  EXPIRED
+}
