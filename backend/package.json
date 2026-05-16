@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "npm install --include=dev && npx prisma generate && npx prisma db push && npx tsx prisma/seed.ts && tsc",
-    "start": "node dist/src/server.js",
+    "start": "npx prisma db push && npx tsx prisma/seed.ts && node dist/src/server.js",
     "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --runInBand"
   },
   "keywords": [],
@@ -24,10 +24,8 @@
     "@types/supertest": "^7.2.0",
     "cross-env": "^10.1.0",
     "jest": "^30.4.2",
-    "prisma": "^7.8.0",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.9",
-    "tsx": "^4.22.0",
     "typescript": "^6.0.3"
   },
   "dependencies": {
@@ -42,6 +40,8 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "node-cron": "^4.2.1",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.0",
     "zod": "^4.4.3"
   }
 }
