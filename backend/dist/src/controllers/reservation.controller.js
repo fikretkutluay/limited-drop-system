@@ -11,6 +11,16 @@ export const reserveProduct = async (req, res, next) => {
     try {
         const { productId, quantity, userId } = req.body;
         const reservation = await prisma.$transaction(async (tx) => {
+            const existingReservation = await tx.reservation.findFirst({
+                where: {
+                    userId,
+                    productId,
+                    status: 'PENDING',
+                }
+            });
+            if (existingReservation) {
+                throw new Error('You already have an active reservation for this product');
+            }
             const product = await tx.product.findUnique({
                 where: { id: productId }
             });

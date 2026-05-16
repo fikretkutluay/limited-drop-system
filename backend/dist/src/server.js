@@ -45,7 +45,10 @@ app.use((err, req, res, next) => {
         error: err.message || 'Internal Server Error',
     });
 });
-startCronJobs();
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+export { app };
+if (process.env.NODE_ENV !== 'test') {
+    startCronJobs();
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
